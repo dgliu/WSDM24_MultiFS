@@ -3,18 +3,18 @@ import sys, os
 import torch
 import pickle
 from dataloader import Dtfloader
-# import modules.models as models
+import modules.models as models
 
-# def getModel(model:str, opt):
-#     model = model.lower()
-#     if model == "dnn":
-#         return models.DNN(opt)
-#     elif model == "deepfm":
-#         return models.DeepFM(opt)
-#     elif model == "dcn":
-#         return models.DeepCrossNet(opt)
-#     else:
-#         raise ValueError("Invalid model type: {}".format(model))
+def getModel(model:str, opt):
+    model = model.lower()
+    if model == "dnn":
+        return models.DNN(opt)
+    elif model == "deepfm":
+        return models.DeepFM(opt)
+    elif model == "dcn":
+        return models.DeepCrossNet(opt)
+    else:
+        raise ValueError("Invalid model type: {}".format(model))
 
 def getOptim(network, optim, lr, l2):
     params = network.parameters()

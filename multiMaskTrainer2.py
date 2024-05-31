@@ -5,11 +5,11 @@ from pathlib import Path
 import numpy as np
 from sklearn import metrics
 from utils import trainUtils
-from modules import multiMask
+from modules import multiMask2
 
 parser = argparse.ArgumentParser(description="multifs trainer")
 parser.add_argument("--dataset", type=str, help="specify dataset", default="AliExpress-1")
-parser.add_argument("--model", type=str, help="specify model", default="dnn")
+parser.add_argument("--model", type=str, help="specify model", default="deepfm")
 
 
 # training hyperparameters
@@ -28,19 +28,19 @@ parser.add_argument("--mlp_bn", action="store_true", default=False, help="mlp ba
 parser.add_argument("--cross", type=int, help="cross layer", default=3)
 
 # device information
-parser.add_argument("--cuda", type=int, choices=range(-1, 8), default=6, help="device info")
+parser.add_argument("--cuda", type=int, choices=range(-1, 8), default=0, help="device info")
 
 # mask information
 parser.add_argument("--mask_weight_init", type=float, default=0.5, help="mask weight initial value")
-parser.add_argument("--scaling", type=float, default=50, help="mask scaling value")
+parser.add_argument("--scaling", type=float, default=3, help="mask scaling value")
 parser.add_argument("--final_temp", type=float, default=100, help="final temperature")
 parser.add_argument("--init_thre", type=float, default=0.95, help="mask_s init threshold")
 parser.add_argument("--search_epoch", type=int, default=5, help="search epochs")
 parser.add_argument("--rewind_epoch", type=int, default=0, help="rewind epoch")
-parser.add_argument("--lambda1", type=float, default=0.5, help="share loss rate")
+parser.add_argument("--lambda1", type=float, default=0.1, help="share loss rate")
 parser.add_argument("--lambda2_s", type=float, default=2e-8, help="regularization rate")
 parser.add_argument("--lambda2", type=float, default=1e-9, help="regularization rate")
-parser.add_argument("--lambda3", type=float, default=2e-8, help="regularization rate")
+parser.add_argument("--lambda3", type=float, default=1e-8, help="regularization rate")
 args = parser.parse_args()
 
 my_seed = 2022
@@ -69,9 +69,9 @@ class Trainer(object):
         self.temp_increase = opt["final_temp"] ** (1. / (opt["search_epoch"] - 1))
         self.dataloader = trainUtils.getDataLoader(opt["dataset"], opt["data_dir"])
         self.device = trainUtils.getDevice(opt["cuda"])
-        self.network = multiMask.getModel(opt["model"], opt["model_opt"]).to(self.device)
+        self.network = multiMask2.getModel(opt["model"], opt["model_opt"]).to(self.device)
         self.criterion = torch.nn.BCEWithLogitsLoss(reduction='none')
-        self.optim = multiMask.getOptim(self.network, opt["optimizer"], self.lr, self.l2)
+        self.optim = multiMask2.getOptim(self.network, opt["optimizer"], self.lr, self.l2)
         self.logger = trainUtils.get_log(opt['model'])
         self.model_opt = opt["model_opt"]
         self.mask_weight_s = None
@@ -202,7 +202,7 @@ class Trainer(object):
         self.network.rewind_weights()
         cur_auc = 0.0
         early_stop = False
-        self.optim = multiMask.getOptim(self.network, "adam", self.lr, self.l2)[:1]
+        self.optim = multiMask2.getOptim(self.network, "adam", self.lr, self.l2)[:1]
         rate_s, rate_i, rate_j = self.network.compute_remaining_weights()
 
         self.logger.info("-----------------Begin Train-----------------")
@@ -288,6 +288,6 @@ def main():
 
 if __name__ == "__main__":
     """
-    python multiMaskTrainer.py --dataset 'AliExpress-1' --model 'deepfm'   
+    python multiMaskTrainer2.py --dataset 'AliExpress-1' --model 'deepfm'   
     """
     main()
