@@ -70,7 +70,7 @@ An example of running MultiFS:
 # For AliExpress-1/AliExpress-2 
 python multiMaskTrainer2.py --dataset AliExpress-1 --model deepfm
 
-# For ali-ccp
+# For AliCCP
 python multiMaskTrainer3.py --dataset ali-ccp --model deepfm
 ```
 
