@@ -6,11 +6,13 @@ Dugang Liu, Chaohua Yang, Xing Tang, Yejing Wang, Fuyuan Lyu, Weihong Luo, Xiuqi
 
 **Please cite our WSDM '24 paper if you use our codes. Thanks!**
 
-### Requirement
+
+## Requirement
 
 See the contents of requirements.txt
 
-### Data Preprocessing
+
+## Data Preprocessing
 
 Please download the original data ([AliExpress](https://tianchi.aliyun.com/dataset/74690) and [AliCCP](https://tianchi.aliyun.com/dataset/408)) and place them in the corresponding directory of data.
 
@@ -54,7 +56,7 @@ python datatransform/ali_ccp2tf.py --data_type 'test' \
 --stats '../data/ali-ccp/stats/' --record '../data/ali-ccp/tfrecord/'
 ```
 
-### Usage
+## Usage
 
 An example of running a backbone model:
 
@@ -75,3 +77,4 @@ python multiMaskTrainer3.py --dataset ali-ccp --model deepfm
 ## 
 
 If you have any issues or ideas, feel free to contact us ([dugang.ldg@gmail.com](mailto:dugang.ldg@gmail.com)).
+
